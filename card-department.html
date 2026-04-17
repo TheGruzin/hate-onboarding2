@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Карточка отдела — Hate Agency</title>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #0f0f10; --surface: #1a1a1c; --surface2: #222226;
+  --border: rgba(255,255,255,0.07); --border-hover: rgba(255,255,255,0.15);
+  --accent: #ff2d2d; --accent2: #6c63ff; --text: #f0ede8; --muted: #6a6865;
+  --green: #1D9E75; --amber: #EF9F27; --blue: #378ADD; --radius: 12px; --radius-sm: 8px;
+}
+body { background: var(--bg); color: var(--text); font-family: 'Golos Text', sans-serif; font-size: 14px; line-height: 1.6; min-height: 100vh; }
+
+.sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 216px; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 20px 0 24px; z-index: 100; }
+.logo { padding: 0 18px 20px; border-bottom: 1px solid var(--border); margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+.logo-mark { font-family: 'Unbounded', sans-serif; font-size: 14px; font-weight: 700; line-height: 1.15; color: var(--text); }
+.logo-right { display: flex; flex-direction: column; gap: 2px; }
+.logo-x { font-size: 10px; color: var(--muted); }
+.logo-agency { font-family: 'Unbounded', sans-serif; font-size: 10px; font-weight: 700; color: var(--accent); letter-spacing: 0.5px; }
+.nav-group { padding: 0 10px; margin-bottom: 20px; }
+.nav-label { font-size: 10px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted); padding: 0 8px; margin-bottom: 4px; }
+.nav-item { display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: 8px; color: var(--muted); font-size: 13px; text-decoration: none; transition: all 0.15s; }
+.nav-item:hover { background: var(--surface2); color: var(--text); }
+.nav-item.active { background: var(--surface2); color: var(--text); }
+.nav-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--muted); flex-shrink: 0; }
+.nav-item.active .nav-dot { background: var(--accent); }
+.sidebar-bottom { margin-top: auto; padding: 0 18px; }
+.user-row { display: flex; align-items: center; gap: 10px; padding-top: 16px; border-top: 1px solid var(--border); }
+.user-avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--accent2); display: flex; align-items: center; justify-content: center; font-family: 'Unbounded', sans-serif; font-size: 10px; font-weight: 700; flex-shrink: 0; }
+.user-name { font-size: 12px; font-weight: 600; }
+.user-role { font-size: 11px; color: var(--muted); }
+
+.main { margin-left: 216px; padding: 44px 52px 80px; max-width: 860px; }
+.breadcrumb { font-size: 12px; color: var(--muted); margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+.breadcrumb a { color: var(--muted); text-decoration: none; }
+.breadcrumb a:hover { color: var(--text); }
+.breadcrumb .sep { opacity: 0.4; }
+.breadcrumb .current { color: var(--text); }
+
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; animation: fadeUp 0.3s ease both; }
+.card-section { padding: 20px 24px; border-bottom: 1px solid var(--border); }
+.card-section:last-child { border-bottom: none; }
+.section-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
+
+.tag { font-size: 11px; padding: 3px 10px; border-radius: 100px; border: 1px solid var(--border); color: var(--muted); background: var(--surface2); display: inline-block; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.when-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; font-size: 13px; color: var(--muted); line-height: 1.5; }
+.when-item:last-child { margin-bottom: 0; }
+.when-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+.when-dot.yes { background: var(--green); }
+.when-dot.no  { background: var(--amber); }
+
+.step-item { display: flex; align-items: flex-start; gap: 12px; padding: 10px 14px; background: var(--surface2); border-radius: var(--radius-sm); margin-bottom: 6px; font-size: 13px; color: var(--muted); line-height: 1.5; }
+.step-item:last-child { margin-bottom: 0; }
+.step-num { font-family: 'Unbounded', sans-serif; font-size: 10px; font-weight: 700; color: var(--muted); min-width: 16px; margin-top: 2px; }
+code { font-family: monospace; font-size: 12px; background: rgba(255,255,255,0.07); padding: 1px 6px; border-radius: 4px; color: var(--text); }
+
+.team-item { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 8px; transition: border-color 0.15s; }
+.team-item:last-child { margin-bottom: 0; }
+.team-item:hover { border-color: var(--border-hover); }
+.avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; flex-shrink: 0; }
+.avatar-amber  { background: rgba(239,159,39,0.15); color: var(--amber); }
+.avatar-blue   { background: rgba(55,138,221,0.15); color: var(--blue); }
+.avatar-green  { background: rgba(29,158,117,0.15); color: var(--green); }
+.avatar-purple { background: rgba(108,99,255,0.15); color: var(--accent2); }
+.team-name { font-size: 13px; font-weight: 600; }
+.team-role { font-size: 11px; color: var(--muted); }
+.tg-link { font-size: 12px; color: var(--blue); text-decoration: none; margin-left: auto; }
+.tg-link:hover { text-decoration: underline; }
+.badge-lead { font-size: 10px; font-weight: 600; padding: 3px 9px; border-radius: 100px; background: rgba(239,159,39,0.12); color: var(--amber); margin-left: auto; white-space: nowrap; }
+
+.from-portal { font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 4px; text-transform: none; letter-spacing: 0; font-weight: 400; }
+
+@keyframes fadeUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-mark">por<br>tal.</div>
+    <div class="logo-right">
+      <span class="logo-x">×</span>
+      <span class="logo-agency">hateagency</span>
+    </div>
+  </div>
+  <div class="nav-group">
+    <div class="nav-label">Меню</div>
+    <a class="nav-item" href="https://portal.corpsolutions.io/profile"><span class="nav-dot"></span> Профиль</a>
+    <a class="nav-item active" href="onboarding.html"><span class="nav-dot"></span> База знаний</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-label">Компания</div>
+    <a class="nav-item" href="https://portal.corpsolutions.io/company/structure"><span class="nav-dot"></span> Структура</a>
+    <a class="nav-item" href="https://portal.corpsolutions.io/company/chats"><span class="nav-dot"></span> Чаты компании</a>
+  </div>
+  <div class="sidebar-bottom">
+    <div class="user-row">
+      <div class="user-avatar">ЭМ</div>
+      <div>
+        <div class="user-name">Эдуард Мамаладзе</div>
+        <div class="user-role">Account Group Head</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<main class="main">
+  <div class="breadcrumb">
+    <a href="onboarding.html">Онбординг</a>
+    <span class="sep">›</span>
+    <a href="onboarding.html">Отделы реализации</a>
+    <span class="sep">›</span>
+    <span class="current">Креатив</span>
+  </div>
+
+  <div class="card">
+
+    <!-- Header -->
+    <div class="card-section" style="display:flex; align-items:center; gap:18px;">
+      <div style="width:52px; height:52px; border-radius:var(--radius-sm); background:rgba(239,159,39,0.12); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" stroke="#EF9F27" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div style="flex:1;">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:4px;">
+          <span style="font-family:'Unbounded',sans-serif; font-size:18px; font-weight:700;">Креатив</span>
+          <span style="font-size:11px; font-weight:600; padding:3px 10px; border-radius:100px; background:rgba(55,138,221,0.12); color:var(--blue);">Внутренний отдел</span>
+        </div>
+        <p style="font-size:13px; color:var(--muted); margin:0;">Разработка концепций и идей для клиентских проектов</p>
+      </div>
+    </div>
+
+    <!-- Responsibility -->
+    <div class="card-section">
+      <div class="section-label">Зона ответственности</div>
+      <div class="tags">
+        <span class="tag">Концепции кампаний</span>
+        <span class="tag">Нейминг</span>
+        <span class="tag">Сценарии роликов</span>
+        <span class="tag">Идеи спецпроектов</span>
+        <span class="tag">Копирайт</span>
+      </div>
+    </div>
+
+    <!-- When to connect -->
+    <div class="card-section">
+      <div class="section-label">Когда подключать</div>
+      <div class="when-item"><div class="when-dot yes"></div>На этапе брифинга — когда нужна большая идея или концепция кампании</div>
+      <div class="when-item"><div class="when-dot yes"></div>Когда клиент просит нестандартное решение или спецпроект</div>
+      <div class="when-item"><div class="when-dot no"></div>Не подключать на мелкие задачи — посты, баннеры, рутинный контент</div>
+    </div>
+
+    <!-- How to brief -->
+    <div class="card-section">
+      <div class="section-label">Как передавать задачу</div>
+      <div class="step-item"><span class="step-num">01</span><span>Завести задачу в Яндекс Трекере с тегом <code>креатив</code></span></div>
+      <div class="step-item"><span class="step-num">02</span><span>Приложить заполненный бриф — без брифа задача не берётся в работу</span></div>
+      <div class="step-item"><span class="step-num">03</span><span>Минимальный срок — 5 рабочих дней. Срочные задачи согласовывать лично с руководителем</span></div>
+    </div>
+
+    <!-- Team -->
+    <div class="card-section">
+      <div class="section-label">
+        Команда отдела
+        <span class="from-portal">
+          <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="4" r="2" stroke="currentColor" stroke-width="1.1"/><path d="M1 10c0-2 2-3.5 5-3.5s5 1.5 5 3.5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>
+          Из структуры портала
+        </span>
+      </div>
+      <div class="team-item">
+        <div class="avatar avatar-amber">КА</div>
+        <div style="flex:1;">
+          <div class="team-name">Катя Архипова</div>
+          <div class="team-role">Креативный директор · руководитель отдела</div>
+        </div>
+        <span class="badge-lead">Контакт</span>
+        <a class="tg-link" href="https://t.me/katya_arh" style="margin-left:12px;">@katya_arh</a>
+      </div>
+      <div class="team-item">
+        <div class="avatar avatar-blue">МС</div>
+        <div style="flex:1;">
+          <div class="team-name">Макс Соколов</div>
+          <div class="team-role">Копирайтер</div>
+        </div>
+        <a class="tg-link" href="https://t.me/max_copy">@max_copy</a>
+      </div>
+      <div class="team-item">
+        <div class="avatar avatar-green">НР</div>
+        <div style="flex:1;">
+          <div class="team-name">Настя Романова</div>
+          <div class="team-role">Креатор</div>
+        </div>
+        <a class="tg-link" href="https://t.me/nastya_cr">@nastya_cr</a>
+      </div>
+    </div>
+
+  </div>
+</main>
+</body>
+</html>

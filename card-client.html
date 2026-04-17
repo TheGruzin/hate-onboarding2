@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Карточка клиента — Hate Agency</title>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #0f0f10; --surface: #1a1a1c; --surface2: #222226; --surface3: #2a2a2e;
+  --border: rgba(255,255,255,0.07); --border-hover: rgba(255,255,255,0.15);
+  --accent: #ff2d2d; --accent2: #6c63ff; --text: #f0ede8; --muted: #6a6865;
+  --green: #1D9E75; --amber: #EF9F27; --blue: #378ADD; --radius: 12px; --radius-sm: 8px;
+}
+body { background: var(--bg); color: var(--text); font-family: 'Golos Text', sans-serif; font-size: 14px; line-height: 1.6; min-height: 100vh; }
+
+.sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 216px; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 20px 0 24px; z-index: 100; }
+.logo { padding: 0 18px 20px; border-bottom: 1px solid var(--border); margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+.logo-mark { font-family: 'Unbounded', sans-serif; font-size: 14px; font-weight: 700; line-height: 1.15; color: var(--text); }
+.logo-right { display: flex; flex-direction: column; gap: 2px; }
+.logo-x { font-size: 10px; color: var(--muted); }
+.logo-agency { font-family: 'Unbounded', sans-serif; font-size: 10px; font-weight: 700; color: var(--accent); letter-spacing: 0.5px; }
+.nav-group { padding: 0 10px; margin-bottom: 20px; }
+.nav-label { font-size: 10px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted); padding: 0 8px; margin-bottom: 4px; }
+.nav-item { display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: 8px; color: var(--muted); font-size: 13px; text-decoration: none; transition: all 0.15s; }
+.nav-item:hover { background: var(--surface2); color: var(--text); }
+.nav-item.active { background: var(--surface2); color: var(--text); }
+.nav-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--muted); flex-shrink: 0; }
+.nav-item.active .nav-dot { background: var(--accent); }
+.sidebar-bottom { margin-top: auto; padding: 0 18px; }
+.user-row { display: flex; align-items: center; gap: 10px; padding-top: 16px; border-top: 1px solid var(--border); }
+.user-avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--accent2); display: flex; align-items: center; justify-content: center; font-family: 'Unbounded', sans-serif; font-size: 10px; font-weight: 700; flex-shrink: 0; }
+.user-name { font-size: 12px; font-weight: 600; }
+.user-role { font-size: 11px; color: var(--muted); }
+
+.main { margin-left: 216px; padding: 44px 52px 80px; max-width: 860px; }
+.breadcrumb { font-size: 12px; color: var(--muted); margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+.breadcrumb a { color: var(--muted); text-decoration: none; }
+.breadcrumb a:hover { color: var(--text); }
+.breadcrumb .sep { opacity: 0.4; }
+.breadcrumb .current { color: var(--text); }
+
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.card-section { padding: 20px 24px; border-bottom: 1px solid var(--border); }
+.card-section:last-child { border-bottom: none; }
+
+.section-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
+
+.tag { font-size: 11px; padding: 3px 10px; border-radius: 100px; border: 1px solid var(--border); color: var(--muted); background: var(--surface2); display: inline-block; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.contact-card { border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px; transition: border-color 0.15s; }
+.contact-card:hover { border-color: var(--border-hover); }
+.contact-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.avatar { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; flex-shrink: 0; }
+.avatar-amber { background: rgba(239,159,39,0.15); color: var(--amber); }
+.avatar-blue  { background: rgba(55,138,221,0.15); color: var(--blue); }
+.avatar-green { background: rgba(29,158,117,0.15); color: var(--green); }
+.avatar-purple{ background: rgba(108,99,255,0.15); color: var(--accent2); }
+.contact-name { font-size: 13px; font-weight: 600; }
+.contact-role { font-size: 11px; color: var(--muted); }
+
+.contact-table { width: 100%; font-size: 12px; border-collapse: collapse; }
+.contact-table td { padding: 3px 0; vertical-align: top; }
+.contact-table td:first-child { color: var(--muted); width: 90px; }
+.contact-table td:last-child { color: var(--text); }
+.tg-link { color: var(--blue); text-decoration: none; }
+.tg-link:hover { text-decoration: underline; }
+
+.search-wrap { position: relative; margin-bottom: 14px; }
+.search-icon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); opacity: 0.3; pointer-events: none; }
+.search-input { width: 100%; padding: 8px 12px 8px 32px; font-size: 13px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface2); color: var(--text); outline: none; font-family: 'Golos Text', sans-serif; transition: border-color 0.15s; }
+.search-input:focus { border-color: var(--border-hover); }
+.search-input::placeholder { color: var(--muted); }
+
+.mat-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 6px; transition: border-color 0.15s; cursor: pointer; }
+.mat-item:last-child { margin-bottom: 0; }
+.mat-item:hover { border-color: var(--border-hover); }
+.mat-icon { opacity: 0.4; flex-shrink: 0; }
+.mat-name { font-size: 13px; flex: 1; }
+.mat-meta { font-size: 11px; color: var(--muted); }
+
+.empty { text-align: center; padding: 28px; color: var(--muted); font-size: 13px; display: none; }
+
+@keyframes fadeUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+.card { animation: fadeUp 0.3s ease both; }
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-mark">por<br>tal.</div>
+    <div class="logo-right">
+      <span class="logo-x">×</span>
+      <span class="logo-agency">hateagency</span>
+    </div>
+  </div>
+  <div class="nav-group">
+    <div class="nav-label">Меню</div>
+    <a class="nav-item" href="https://portal.corpsolutions.io/profile"><span class="nav-dot"></span> Профиль</a>
+    <a class="nav-item" href="https://portal.corpsolutions.io/calendar"><span class="nav-dot"></span> Календарь</a>
+    <a class="nav-item active" href="onboarding.html"><span class="nav-dot"></span> База знаний</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-label">Компания</div>
+    <a class="nav-item" href="https://portal.corpsolutions.io/company/structure"><span class="nav-dot"></span> Структура</a>
+    <a class="nav-item" href="https://portal.corpsolutions.io/company/chats"><span class="nav-dot"></span> Чаты компании</a>
+    <a class="nav-item" href="https://portal.corpsolutions.io/company/materials"><span class="nav-dot"></span> Материалы</a>
+  </div>
+  <div class="sidebar-bottom">
+    <div class="user-row">
+      <div class="user-avatar">ЭМ</div>
+      <div>
+        <div class="user-name">Эдуард Мамаладзе</div>
+        <div class="user-role">Account Group Head</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<main class="main">
+  <div class="breadcrumb">
+    <a href="onboarding.html">Онбординг</a>
+    <span class="sep">›</span>
+    <a href="onboarding.html">Клиенты и проекты</a>
+    <span class="sep">›</span>
+    <span class="current">Яндекс</span>
+  </div>
+
+  <div class="card">
+
+    <!-- Header -->
+    <div class="card-section" style="display:flex; align-items:flex-start; gap:18px;">
+      <div style="width:52px; height:52px; border-radius:var(--radius-sm); background:rgba(55,138,221,0.15); display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:600; color:var(--blue); flex-shrink:0; font-family:'Unbounded',sans-serif;">Я</div>
+      <div style="flex:1;">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:4px;">
+          <span style="font-family:'Unbounded',sans-serif; font-size:18px; font-weight:700;">Яндекс</span>
+          <span style="font-size:11px; font-weight:600; padding:3px 10px; border-radius:100px; background:rgba(29,158,117,0.15); color:var(--green);">Активный</span>
+        </div>
+        <p style="font-size:13px; color:var(--muted); margin:0;">ООО «Яндекс»</p>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:8px; align-items:flex-end; flex-shrink:0;">
+        <div style="text-align:right;">
+          <p style="font-size:11px; color:var(--muted); margin:0 0 2px;">Аккаунт</p>
+          <p style="font-size:13px; font-weight:600; margin:0;">Эдуард М.</p>
+        </div>
+        <div style="background:rgba(239,159,39,0.1); border:1px solid rgba(239,159,39,0.25); border-radius:7px; padding:5px 12px; text-align:right;">
+          <p style="font-size:10px; color:var(--amber); margin:0 0 1px; font-weight:600; letter-spacing:0.5px; text-transform:uppercase;">Постоплата</p>
+          <p style="font-size:13px; font-weight:600; color:var(--text); margin:0;">30 дней</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- About -->
+    <div class="card-section">
+      <div class="section-label">О клиенте</div>
+      <p style="font-size:13px; color:var(--muted); line-height:1.7; margin:0;">Крупнейшая технологическая компания России. Работаем с командой бренда по направлениям SMM и спецпроектов. Клиент с 2021 года, отношения стабильные.</p>
+    </div>
+
+    <!-- Directions -->
+    <div class="card-section">
+      <div class="section-label">Основные направления</div>
+      <div class="tags">
+        <span class="tag">SMM</span>
+        <span class="tag">Спецпроекты</span>
+        <span class="tag">Посевы</span>
+        <span class="tag">Инфлюенс</span>
+      </div>
+    </div>
+
+    <!-- Contacts -->
+    <div class="card-section">
+      <div class="section-label">
+        Контакты на стороне клиента
+        <span id="cnt-count" style="font-size:11px; color:var(--muted); text-transform:none; letter-spacing:0;">4 человека</span>
+      </div>
+      <div class="search-wrap">
+        <svg class="search-icon" width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.4"/><path d="M11 11l3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        <input class="search-input" type="text" placeholder="Поиск по имени или должности..." oninput="filterContacts(this.value)">
+      </div>
+      <div class="contact-grid" id="contacts">
+        <div class="contact-card" data-s="анна смирнова бренд-менеджер лпр">
+          <div class="contact-head">
+            <div class="avatar avatar-amber">АС</div>
+            <div><div class="contact-name">Анна Смирнова</div><div class="contact-role">Бренд-менеджер · ЛПР</div></div>
+          </div>
+          <table class="contact-table">
+            <tr><td>Телеграм</td><td><a class="tg-link" href="https://t.me/anna_smirnova">@anna_smirnova</a></td></tr>
+            <tr><td>День рождения</td><td>14 марта</td></tr>
+            <tr><td>Особенности</td><td style="color:var(--muted);">Любит детальные брифы, не звонить без предупреждения</td></tr>
+          </table>
+        </div>
+        <div class="contact-card" data-s="дмитрий козлов маркетолог операционный">
+          <div class="contact-head">
+            <div class="avatar avatar-blue">ДК</div>
+            <div><div class="contact-name">Дмитрий Козлов</div><div class="contact-role">Маркетолог · Операционный</div></div>
+          </div>
+          <table class="contact-table">
+            <tr><td>Телеграм</td><td><a class="tg-link" href="https://t.me/d_kozlov">@d_kozlov</a></td></tr>
+            <tr><td>День рождения</td><td>2 июня</td></tr>
+            <tr><td>Особенности</td><td style="color:var(--muted);">Основной оперативный контакт, отвечает быстро</td></tr>
+          </table>
+        </div>
+        <div class="contact-card" data-s="мария волкова финансовый директор">
+          <div class="contact-head">
+            <div class="avatar avatar-green">МВ</div>
+            <div><div class="contact-name">Мария Волкова</div><div class="contact-role">Финансовый директор</div></div>
+          </div>
+          <table class="contact-table">
+            <tr><td>Телеграм</td><td><a class="tg-link" href="https://t.me/m_volkova">@m_volkova</a></td></tr>
+            <tr><td>День рождения</td><td>29 августа</td></tr>
+            <tr><td>Особенности</td><td style="color:var(--muted);">Только по закрывающим документам, через Анну</td></tr>
+          </table>
+        </div>
+        <div class="contact-card" data-s="игорь петров pr менеджер">
+          <div class="contact-head">
+            <div class="avatar avatar-purple">ИП</div>
+            <div><div class="contact-name">Игорь Петров</div><div class="contact-role">PR-менеджер</div></div>
+          </div>
+          <table class="contact-table">
+            <tr><td>Телеграм</td><td><a class="tg-link" href="https://t.me/igor_pr">@igor_pr</a></td></tr>
+            <tr><td>День рождения</td><td>11 ноября</td></tr>
+            <tr><td>Особенности</td><td style="color:var(--muted);">Подключать только на спецпроекты и PR-задачи</td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="empty" id="cnt-empty">Никого не нашли — попробуй другой запрос</div>
+    </div>
+
+    <!-- Materials -->
+    <div class="card-section">
+      <div class="section-label">Полезные материалы</div>
+      <div class="mat-item">
+        <svg class="mat-icon" width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="1" width="10" height="13" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5 5h5M5 8h5M5 11h3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        <span class="mat-name">Гайдбук Яндекс 2024</span>
+        <span class="mat-meta">PDF · 4.2 МБ</span>
+      </div>
+      <div class="mat-item">
+        <svg class="mat-icon" width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="1" width="10" height="13" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5 5h5M5 8h5M5 11h3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        <span class="mat-name">Презентация Q3 2024</span>
+        <span class="mat-meta">PPTX · 18 МБ</span>
+      </div>
+      <div class="mat-item">
+        <svg class="mat-icon" width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="1" width="10" height="13" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5 5h5M5 8h5M5 11h3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        <span class="mat-name">Tone of voice · Бренд-документ</span>
+        <span class="mat-meta">DOCX · 1.1 МБ</span>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<script>
+function filterContacts(q) {
+  q = q.toLowerCase().trim();
+  const cards = document.querySelectorAll('#contacts .contact-card');
+  let n = 0;
+  cards.forEach(c => {
+    const match = !q || c.dataset.s.includes(q);
+    c.style.display = match ? '' : 'none';
+    if (match) n++;
+  });
+  document.getElementById('cnt-empty').style.display = n === 0 ? 'block' : 'none';
+  document.getElementById('cnt-count').textContent = q ? n + ' из 4' : '4 человека';
+}
+</script>
+</body>
+</html>

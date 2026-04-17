@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Онбординг аккаунтов — Hate Agency</title>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #0f0f10; --surface: #1a1a1c; --surface2: #222226; --surface3: #2a2a2e;
+  --border: rgba(255,255,255,0.07); --border-hover: rgba(255,255,255,0.15);
+  --accent: #ff2d2d; --accent2: #6c63ff; --text: #f0ede8; --muted: #6a6865;
+  --green: #1D9E75; --amber: #EF9F27; --blue: #378ADD; --radius: 12px; --radius-sm: 8px;
+}
+body { background: var(--bg); color: var(--text); font-family: 'Golos Text', sans-serif; font-size: 14px; line-height: 1.6; min-height: 100vh; }
+.sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 216px; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 20px 0 24px; z-index: 100; }
+.logo { padding: 0 18px 20px; border-bottom: 1px solid var(--border); margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+.logo-mark { font-family: 'Unbounded', sans-serif; font-size: 14px; font-weight: 700; line-height: 1.15; color: var(--text); }
+.logo-right { display: flex; flex-direction: column; gap: 2px; }
+.logo-x { font-size: 10px; color: var(--muted); }
+.logo-agency { font-family: 'Unbounded', sans-serif; font-size: 10px; font-weight: 700; color: var(--accent); letter-spacing: 0.5px; }
+.nav-group { padding: 0 10px; margin-bottom: 20px; }
+.nav-label { font-size: 10px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted); padding: 0 8px; margin-bottom: 4px; }
+.nav-item { display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: 8px; color: var(--muted); font-size: 13px; text-decoration: none; transition: all 0.15s; cursor: pointer; border: none; background: none; width: 100%; text-align: left; font-family: 'Golos Text', sans-serif; }
+.nav-item:hover { background: var(--surface2); color: var(--text); }
+.nav-item.active { background: var(--surface2); color: var(--text); }
+.nav-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--muted); flex-shrink: 0; }
+.nav-item.active .nav-dot { background: var(--accent); }
+.sidebar-bottom { margin-top: auto; padding: 0 18px; }
+.progress-meta { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-bottom: 6px; }
+.progress-track { height: 3px; background: var(--surface2); border-radius: 100px; overflow: hidden; }
+.progress-fill { height: 100%; width: 33%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 100px; }
+.user-row { display: flex; align-items: center; gap: 10px; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+.user-avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--accent2); display: flex; align-items: center; justify-content: center; font-family: 'Unbounded', sans-serif; font-size: 10px; font-weight: 700; flex-shrink: 0; }
+.user-name { font-size: 12px; font-weight: 600; }
+.user-role { font-size: 11px; color: var(--muted); }
+.main { margin-left: 216px; padding: 44px 52px 80px; max-width: 1020px; }
+.page { display: none; }
+.page.active { display: block; }
+.breadcrumb { font-size: 12px; color: var(--muted); margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+.breadcrumb a { color: var(--muted); text-decoration: none; cursor: pointer; }
+.breadcrumb a:hover { color: var(--text); }
+.breadcrumb .sep { opacity: 0.4; }
+.breadcrumb .current { color: var(--text); }
+.page-title { font-family: 'Unbounded', sans-serif; font-size: 26px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 6px; line-height: 1.2; }
+.page-sub { color: var(--muted); font-size: 13px; margin-bottom: 32px; }
+.welcome { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px 28px; margin-bottom: 36px; display: flex; align-items: center; gap: 20px; position: relative; overflow: hidden; }
+.welcome::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--accent); }
+.welcome-av { width: 52px; height: 52px; border-radius: 50%; background: var(--accent2); display: flex; align-items: center; justify-content: center; font-family: 'Unbounded', sans-serif; font-size: 15px; font-weight: 700; flex-shrink: 0; }
+.welcome-text h2 { font-family: 'Unbounded', sans-serif; font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+.welcome-text p { font-size: 13px; color: var(--muted); max-width: 520px; line-height: 1.55; }
+.welcome-badge { margin-left: auto; flex-shrink: 0; background: rgba(108,99,255,0.12); border: 1px solid rgba(108,99,255,0.25); color: #a099ff; font-size: 11px; font-weight: 600; padding: 6px 14px; border-radius: 100px; }
+.section-label { font-family: 'Unbounded', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; margin-top: 36px; display: flex; align-items: center; gap: 12px; }
+.section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+.bcard { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px 22px 18px; display: flex; flex-direction: column; transition: border-color 0.2s, transform 0.15s; position: relative; overflow: hidden; animation: fadeUp 0.4s ease both; }
+.bcard:hover { border-color: var(--border-hover); transform: translateY(-2px); }
+.bcard.status-done { border-left: 3px solid var(--green); }
+.bcard.status-wip { border-left: 3px solid var(--amber); }
+.bcard.status-live { border-left: 3px solid var(--accent2); }
+.bcard-num { font-family: 'Unbounded', sans-serif; font-size: 10px; font-weight: 700; color: var(--muted); letter-spacing: 1px; margin-bottom: 8px; }
+.bcard-title { font-family: 'Unbounded', sans-serif; font-size: 13px; font-weight: 600; line-height: 1.35; margin-bottom: 10px; }
+.bcard-desc { font-size: 12px; color: var(--muted); line-height: 1.6; margin-bottom: 14px; }
+.tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 16px; }
+.tag { font-size: 11px; padding: 3px 9px; border-radius: 100px; background: var(--surface2); color: var(--muted); border: 1px solid var(--border); }
+.checklist { margin-bottom: 16px; }
+.ci { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: var(--muted); margin-bottom: 7px; line-height: 1.4; }
+.ci-box { width: 14px; height: 14px; border-radius: 3px; border: 1px solid var(--border); flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center; font-size: 9px; }
+.ci.done .ci-box { background: var(--green); border-color: var(--green); color: #fff; }
+.ci.done span { color: var(--text); }
+.bcard-footer { margin-top: auto; padding-top: 14px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.status-pill { display: flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; }
+.status-dot { width: 6px; height: 6px; border-radius: 50%; }
+.status-pill.done { color: var(--green); } .status-pill.done .status-dot { background: var(--green); }
+.status-pill.wip { color: var(--amber); } .status-pill.wip .status-dot { background: var(--amber); }
+.status-pill.live { color: #a099ff; } .status-pill.live .status-dot { background: var(--accent2); }
+.portal-link { font-size: 11px; color: var(--muted); text-decoration: none; display: flex; align-items: center; gap: 5px; padding: 5px 12px; border: 1px solid var(--border); border-radius: 7px; transition: all 0.15s; }
+.portal-link:hover { color: var(--text); border-color: var(--border-hover); background: var(--surface2); }
+.portal-link.disabled { opacity: 0.35; cursor: default; pointer-events: none; }
+.mat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; display: flex; flex-direction: column; gap: 6px; transition: border-color 0.2s; }
+.mat-card:hover { border-color: var(--border-hover); }
+.mat-title { font-size: 13px; font-weight: 600; line-height: 1.3; }
+.mat-desc { font-size: 11px; color: var(--muted); line-height: 1.5; }
+.mat-status { font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 100px; display: inline-flex; align-items: center; gap: 4px; width: fit-content; margin-top: 4px; }
+.mat-status.wip { background: rgba(239,159,39,0.12); color: var(--amber); }
+.mat-status.live { background: rgba(108,99,255,0.12); color: #a099ff; }
+.card-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.card-section { padding: 20px 28px; border-bottom: 1px solid var(--border); }
+.card-section:last-child { border-bottom: none; }
+.card-header { display: flex; align-items: flex-start; gap: 18px; }
+.card-avatar { width: 52px; height: 52px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 18px; flex-shrink: 0; }
+.card-avatar.blue { background: rgba(55,138,221,0.15); color: var(--blue); }
+.card-avatar.amber { background: rgba(239,159,39,0.15); color: var(--amber); }
+.card-name { font-size: 20px; font-weight: 600; margin-bottom: 4px; }
+.card-sub { font-size: 13px; color: var(--muted); }
+.card-meta { text-align: right; flex-shrink: 0; }
+.card-meta-label { font-size: 11px; color: var(--muted); margin-bottom: 2px; }
+.card-meta-val { font-size: 13px; font-weight: 600; }
+.card-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); margin-bottom: 10px; }
+.badge-active { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 100px; background: rgba(29,158,117,0.12); color: var(--green); }
+.badge-internal { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 100px; background: rgba(55,138,221,0.12); color: var(--blue); }
+.contacts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.contact-card { border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px; transition: border-color 0.15s; }
+.contact-card:hover { border-color: var(--border-hover); }
+.contact-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.contact-av { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; flex-shrink: 0; }
+.av-amber { background: rgba(239,159,39,0.15); color: var(--amber); }
+.av-blue { background: rgba(55,138,221,0.15); color: var(--blue); }
+.av-green { background: rgba(29,158,117,0.15); color: var(--green); }
+.av-red { background: rgba(255,45,45,0.15); color: var(--accent); }
+.contact-name { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+.contact-role { font-size: 11px; color: var(--muted); }
+.contact-table { width: 100%; font-size: 12px; border-collapse: collapse; }
+.contact-table td { padding: 3px 0; vertical-align: top; }
+.contact-table td:first-child { color: var(--muted); width: 90px; }
+.tg-link { color: var(--blue); text-decoration: none; }
+.search-wrap { position: relative; margin-bottom: 14px; }
+.search-icon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); opacity: 0.35; pointer-events: none; }
+.search-input { width: 100%; padding: 9px 12px 9px 32px; font-size: 13px; font-family: 'Golos Text', sans-serif; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface2); color: var(--text); outline: none; transition: border-color 0.15s; }
+.search-input:focus { border-color: var(--border-hover); }
+.search-input::placeholder { color: var(--muted); }
+.mat-file { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 6px; }
+.mat-file:hover { border-color: var(--border-hover); }
+.mat-file-name { font-size: 13px; color: var(--text); flex: 1; }
+.mat-file-size { font-size: 11px; color: var(--muted); }
+.when-list { display: flex; flex-direction: column; gap: 8px; }
+.when-item { display: flex; align-items: flex-start; gap: 10px; }
+.when-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+.when-dot.go { background: var(--green); }
+.when-dot.warn { background: var(--amber); }
+.when-text { font-size: 13px; color: var(--muted); line-height: 1.5; }
+.steps { display: flex; flex-direction: column; gap: 6px; }
+.step { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--surface2); border-radius: var(--radius-sm); }
+.step-num { font-size: 13px; font-weight: 600; color: var(--muted); min-width: 18px; }
+.step-text { font-size: 13px; color: var(--muted); }
+.step-text code { font-family: monospace; font-size: 12px; background: var(--surface3); padding: 1px 6px; border-radius: 4px; color: var(--text); }
+.team-list { display: flex; flex-direction: column; gap: 8px; }
+.team-item { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border: 1px solid var(--border); border-radius: var(--radius-sm); transition: border-color 0.15s; }
+.team-item:hover { border-color: var(--border-hover); }
+.team-av { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; flex-shrink: 0; }
+.team-info { flex: 1; }
+.team-name { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+.team-role { font-size: 11px; color: var(--muted); }
+.team-badge { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 100px; background: rgba(239,159,39,0.12); color: var(--amber); }
+.portal-source { font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 4px; }
+.hint { margin-top: 44px; padding: 18px 22px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 14px; line-height: 1.5; }
+.hint strong { color: var(--text); }
+.back-btn { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); background: none; border: none; cursor: pointer; padding: 0; margin-bottom: 20px; transition: color 0.15s; font-family: 'Golos Text', sans-serif; }
+.back-btn:hover { color: var(--text); }
+.empty-state { text-align: center; padding: 28px; color: var(--muted); font-size: 13px; display: none; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.bcard:nth-child(1){animation-delay:0.05s} .bcard:nth-child(2){animation-delay:0.10s} .bcard:nth-child(3){animation-delay:0.15s} .bcard:nth-child(4){animation-delay:0.20s} .bcard:nth-child(5){animation-delay:0.25s} .bcard:nth-child(6){animation-delay:0.30s}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-mark">por<br>tal.</div>
+    <div class="logo-right"><span class="logo-x">×</span><span class="logo-agency">hateagency</span></div>
+  </div>
+  <div class="nav-group">
+    <div class="nav-label">Меню</div>
+    <a class="nav-item" href="https://portal.corpsolutions.io/profile"><span class="nav-dot"></span> Профиль</a>
+    <a class="nav-item" href="https://portal.corpsolutions.io/calendar"><span class="nav-dot"></span> Календарь</a>
+    <button class="nav-item active" onclick="showPage('onboarding')"><span class="nav-dot"></span> База знаний</button>
+  </div>
+  <div class="nav-group">
+    <div class="nav-label">Компания</div>
+    <a class="nav-item" href="https://portal.corpsolutions.io/company/handbook"><span class="nav-dot"></span> Handbook</a>
+    <a class="nav-item" href="https://portal.corpsolutions.io/company/structure"><span class="nav-dot"></span> Структура</a>
+    <a class="nav-item" href="https://portal.corpsolutions.io/company/materials"><span class="nav-dot"></span> Материалы</a>
+    <a class="nav-item" href="https://portal.corpsolutions.io/company/chats"><span class="nav-dot"></span> Чаты компании</a>
+    <a class="nav-item" href="https://portal.corpsolutions.io/company/portfolio"><span class="nav-dot"></span> Портфолио</a>
+    <a class="nav-item" href="https://portal.corpsolutions.io/company/events"><span class="nav-dot"></span> Мероприятия</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-label">Сотрудники</div>
+    <a class="nav-item" href="https://portal.corpsolutions.io/employees"><span class="nav-dot"></span> Все сотрудники</a>
+  </div>
+  <div class="sidebar-bottom">
+    <div class="progress-meta"><span>Прогресс онбординга</span><span>2 / 6</span></div>
+    <div class="progress-track"><div class="progress-fill"></div></div>
+    <div class="user-row">
+      <div class="user-avatar">ЭМ</div>
+      <div><div class="user-name">Эдуард Мамаладзе</div><div class="user-role">Account Group Head</div></div>
+    </div>
+  </div>
+</aside>
+
+<main class="main">
+
+  <!-- ONBOARDING PAGE -->
+  <div id="page-onboarding" class="page active">
+    <div class="breadcrumb"><a href="https://portal.corpsolutions.io">Портал</a><span class="sep">›</span><span class="current">Онбординг аккаунтов</span></div>
+    <h1 class="page-title">Онбординг аккаунтов</h1>
+    <p class="page-sub">База знаний для новых сотрудников аккаунтского отдела · 6 блоков</p>
+    <div class="welcome">
+      <div class="welcome-av">ЭМ</div>
+      <div class="welcome-text">
+        <h2>Добро пожаловать в Hate Agency</h2>
+        <p>Этот раздел проведёт тебя по всему, что нужно знать с первого дня: как устроено агентство, с кем работать, какие инструменты использовать и как общаться с клиентами.</p>
+      </div>
+
+    </div>
+    <div class="section-label">Блоки онбординга</div>
+    <div class="grid-2">
+      <div class="bcard status-done">
+        <div class="bcard-num">БЛОК 01</div>
+        <div class="bcard-title">Агентство и структура</div>
+        <div class="bcard-desc">Кто мы, чем занимаемся, как устроена иерархия и где место аккаунтского отдела.</div>
+        <div class="tags"><span class="tag">Сайт агентства</span><span class="tag">Позиционирование</span><span class="tag">Оргструктура</span></div>
+        <div class="checklist">
+          <div class="ci done"><div class="ci-box">✓</div><span>Понимает позиционирование агентства</span></div>
+          <div class="ci done"><div class="ci-box">✓</div><span>Знает иерархию и своего руководителя</span></div>
+          <div class="ci done"><div class="ci-box">✓</div><span>Понимает место аккаунтского отдела</span></div>
+        </div>
+        <div class="bcard-footer">
+          <div class="status-pill done"><div class="status-dot"></div> Готово</div>
+          <a class="portal-link" href="https://portal.corpsolutions.io/company/structure" target="_blank">Открыть структуру</a>
+        </div>
+      </div>
+      <div class="bcard status-wip">
+        <div class="bcard-num">БЛОК 02</div>
+        <div class="bcard-title">Инструменты и процессы</div>
+        <div class="bcard-desc">Яндекс Трекер, Телеграм-чаты, внутренний портал — как заводить задачи и обновлять статусы.</div>
+        <div class="tags"><span class="tag">Яндекс Трекер</span><span class="tag">Телеграм</span><span class="tag">Портал</span></div>
+        <div class="checklist">
+          <div class="ci done"><div class="ci-box">✓</div><span>Зашёл во все инструменты</span></div>
+          <div class="ci done"><div class="ci-box">✓</div><span>Умеет ставить и обновлять задачи</span></div>
+          <div class="ci"><div class="ci-box"></div><span>Вступил во все обязательные чаты</span></div>
+        </div>
+        <div class="bcard-footer">
+          <div class="status-pill wip"><div class="status-dot"></div> В работе</div>
+          <a class="portal-link" href="https://portal.corpsolutions.io/company/chats" target="_blank">Чаты компании</a>
+        </div>
+      </div>
+      <div class="bcard status-wip" style="cursor:pointer" onclick="showPage('client')">
+        <div class="bcard-num">БЛОК 03</div>
+        <div class="bcard-title">Клиенты и проекты</div>
+        <div class="bcard-desc">Активные клиенты, текущие проекты, история отношений и ключевые контакты.</div>
+        <div class="tags"><span class="tag">Активные клиенты</span><span class="tag">Контексты</span><span class="tag">История</span></div>
+        <div class="checklist">
+          <div class="ci"><div class="ci-box"></div><span>Знает всех активных клиентов</span></div>
+          <div class="ci"><div class="ci-box"></div><span>Понимает контекст текущих проектов</span></div>
+          <div class="ci"><div class="ci-box"></div><span>Изучил карточки клиентов</span></div>
+        </div>
+        <div class="bcard-footer">
+          <div class="status-pill wip"><div class="status-dot"></div> Создаётся</div>
+          <a class="portal-link" href="card-client.html" style="color:#a099ff;border-color:rgba(108,99,255,0.3)">Пример карточки →</a>
+        </div>
+      </div>
+      <div class="bcard status-live" style="cursor:pointer" onclick="showPage('department')">
+        <div class="bcard-num">БЛОК 04</div>
+        <div class="bcard-title">Отделы реализации</div>
+        <div class="bcard-desc">С кем работает аккаунт: CMM, продакшн, посевы, креатив, дизайн, бухгалтерия, спецпроекты.</div>
+        <div class="tags"><span class="tag">CMM</span><span class="tag">Продакшн</span><span class="tag">Креатив</span><span class="tag">Дизайн</span><span class="tag">Посевы</span></div>
+        <div class="checklist">
+          <div class="ci"><div class="ci-box"></div><span>Знает зоны ответственности отделов</span></div>
+          <div class="ci"><div class="ci-box"></div><span>Знает контактных лиц</span></div>
+          <div class="ci"><div class="ci-box"></div><span>Понимает когда подключать каждый отдел</span></div>
+        </div>
+        <div class="bcard-footer">
+          <div class="status-pill live"><div class="status-dot"></div> Создаётся</div>
+          <a class="portal-link" href="card-department.html" style="color:#a099ff;border-color:rgba(108,99,255,0.3)">Пример карточки →</a>
+        </div>
+      </div>
+      <div class="bcard status-done">
+        <div class="bcard-num">БЛОК 04.1</div>
+        <div class="bcard-title">Бухгалтерия и документооборот</div>
+        <div class="bcard-desc">Финансовые процессы, договоры, закрывашки, оплаты — как работать с отделом.</div>
+        <div class="tags"><span class="tag">Договоры</span><span class="tag">Закрывашки</span><span class="tag">Счета</span><span class="tag">Документооборот</span></div>
+        <div class="checklist">
+          <div class="ci done"><div class="ci-box">✓</div><span>Регламент работы с документами готов</span></div>
+          <div class="ci"><div class="ci-box"></div><span>Инструкция по таблице документооборота</span></div>
+          <div class="ci"><div class="ci-box"></div><span>Знает контакты отдела</span></div>
+        </div>
+        <div class="bcard-footer">
+          <div class="status-pill done"><div class="status-dot"></div> Частично готово</div>
+          <a class="portal-link" href="card-accounting.html" style="color:#a099ff;border-color:rgba(108,99,255,0.3)">Открыть карточку →</a>
+        </div>
+      </div>
+      <div class="bcard status-wip">
+        <div class="bcard-num">БЛОК 05</div>
+        <div class="bcard-title">Стандарты работы</div>
+        <div class="bcard-desc">Тон писем, сроки ответа, протокол встреч, документооборот, правила работы в трекере.</div>
+        <div class="tags"><span class="tag">Коммуникация</span><span class="tag">Документооборот</span><span class="tag">Трекер</span></div>
+        <div class="checklist">
+          <div class="ci"><div class="ci-box"></div><span>Знает стандарты коммуникации с клиентом</span></div>
+          <div class="ci"><div class="ci-box"></div><span>Умеет заполнять шаблоны документов</span></div>
+          <div class="ci"><div class="ci-box"></div><span>Знает правила работы в трекере</span></div>
+        </div>
+        <div class="bcard-footer">
+          <div class="status-pill wip"><div class="status-dot"></div> В работе</div>
+          <span class="portal-link disabled">Шаблоны — скоро</span>
+        </div>
+      </div>
+      <div class="bcard status-done">
+        <div class="bcard-num">БЛОК 06</div>
+        <div class="bcard-title">Итоги и чеклист</div>
+        <div class="bcard-desc">Финальная проверка: всё ли освоено, что осталось, как двигаться дальше в первый месяц.</div>
+        <div class="tags"><span class="tag">Чеклист</span><span class="tag">Первый месяц</span><span class="tag">Обратная связь</span></div>
+        <div class="checklist">
+          <div class="ci done"><div class="ci-box">✓</div><span>Структура онбординга описана (6 блоков)</span></div>
+          <div class="ci done"><div class="ci-box">✓</div><span>Чаты и оргструктура доступны на портале</span></div>
+          <div class="ci"><div class="ci-box"></div><span>Карточки клиентов и отделов готовы</span></div>
+        </div>
+        <div class="bcard-footer">
+          <div class="status-pill done"><div class="status-dot"></div> Структура готова</div>
+          <a class="portal-link" href="https://portal.corpsolutions.io" target="_blank">На портал</a>
+        </div>
+      </div>
+    </div>
+    <div class="section-label">Статус материалов</div>
+    <div class="grid-3">
+      <div class="mat-card"><div class="mat-title">🏢 Гайд по агентству</div><div class="mat-desc">Позиционирование, ценности, история</div><div class="mat-status wip">● В работе</div></div>
+      <div class="mat-card"><div class="mat-title">📋 Инструкция по трекеру</div><div class="mat-desc">Задачи, статусы, эскалация</div><div class="mat-status wip">● В работе</div></div>
+      <div class="mat-card"><div class="mat-title">💬 Список чатов</div><div class="mat-desc">Обязательные Телеграм-чаты</div><div class="mat-status live">● На портале</div></div>
+      <div class="mat-card"><div class="mat-title">👤 Карточки клиентов</div><div class="mat-desc">Контакты, контексты, особенности</div><div class="mat-status wip">● Создаются</div></div>
+      <div class="mat-card"><div class="mat-title">🏗️ Карточки отделов</div><div class="mat-desc">Ответственность, контакты, процессы</div><div class="mat-status wip">● Создаются</div></div>
+      <div class="mat-card"><div class="mat-title">📄 Шаблоны документов</div><div class="mat-desc">Сметы, брифы, отчёты</div><div class="mat-status wip">● В работе</div></div>
+    </div>
+    <div class="hint">
+      <svg width="18" height="18" viewBox="0 0 20 20" fill="none" style="flex-shrink:0;opacity:0.4"><circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.3"/><path d="M10 9v5M10 6.5v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <span><strong>Все материалы собираются на портале.</strong> По вопросам онбординга — Эдуард Мамаладзе, Account Group Head. Структура и чаты уже доступны по прямым ссылкам выше.</span>
+    </div>
+  </div>
+
+  <!-- CLIENT CARD PAGE -->
+  <div id="page-client" class="page">
+    <button class="back-btn" onclick="showPage('onboarding')">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Назад к онбордингу
+    </button>
+    <div class="breadcrumb"><a onclick="showPage('onboarding')">Онбординг</a><span class="sep">›</span><a onclick="showPage('onboarding')">Клиенты и проекты</a><span class="sep">›</span><span class="current">Яндекс</span></div>
+    <h1 class="page-title">Карточка клиента</h1>
+    <p class="page-sub">Пример · блок 03 — клиенты и проекты</p>
+    <div class="card-wrap">
+      <div class="card-section">
+        <div class="card-header">
+          <div class="card-avatar blue">Я</div>
+          <div style="flex:1">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+              <div class="card-name">Яндекс</div>
+              <span class="badge-active">Активный</span>
+            </div>
+            <div class="card-sub">ООО «Яндекс»</div>
+          </div>
+          <div class="card-meta"><div class="card-meta-label">Аккаунт</div><div class="card-meta-val">Эдуард М.</div></div>
+        </div>
+      </div>
+      <div class="card-section">
+        <div class="card-label">О клиенте</div>
+        <p style="font-size:14px;color:var(--muted);line-height:1.6;margin:0">Крупнейшая технологическая компания России. Работаем с командой бренда по направлениям SMM и спецпроектов. Клиент с 2021 года, отношения стабильные.</p>
+      </div>
+      <div class="card-section">
+        <div class="card-label">Основные направления</div>
+        <div class="tags" style="margin-bottom:0"><span class="tag">SMM</span><span class="tag">Спецпроекты</span><span class="tag">Посевы</span><span class="tag">Инфлюенс</span></div>
+      </div>
+      <div class="card-section">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <div class="card-label" style="margin-bottom:0">Контакты на стороне клиента</div>
+          <span style="font-size:11px;color:var(--muted)" id="contact-count">4 человека</span>
+        </div>
+        <div class="search-wrap">
+          <svg class="search-icon" width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.4"/><path d="M11 11l3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          <input class="search-input" type="text" placeholder="Поиск по имени или должности..." oninput="filterContacts(this.value)">
+        </div>
+        <div class="contacts-grid" id="contacts-list">
+          <div class="contact-card" data-name="анна смирнова" data-role="бренд-менеджер лпр">
+            <div class="contact-head"><div class="contact-av av-amber">АС</div><div><div class="contact-name">Анна Смирнова</div><div class="contact-role">Бренд-менеджер · ЛПР</div></div></div>
+            <table class="contact-table"><tr><td>Телеграм</td><td><a class="tg-link" href="#">@anna_smirnova</a></td></tr><tr><td>День рождения</td><td>14 марта</td></tr><tr><td>Особенности</td><td>Любит детальные брифы, не звонить без предупреждения</td></tr></table>
+          </div>
+          <div class="contact-card" data-name="дмитрий козлов" data-role="маркетолог операционный">
+            <div class="contact-head"><div class="contact-av av-blue">ДК</div><div><div class="contact-name">Дмитрий Козлов</div><div class="contact-role">Маркетолог · Операционный</div></div></div>
+            <table class="contact-table"><tr><td>Телеграм</td><td><a class="tg-link" href="#">@d_kozlov</a></td></tr><tr><td>День рождения</td><td>2 июня</td></tr><tr><td>Особенности</td><td>Основной оперативный контакт, быстро отвечает</td></tr></table>
+          </div>
+          <div class="contact-card" data-name="мария волкова" data-role="финансовый директор">
+            <div class="contact-head"><div class="contact-av av-green">МВ</div><div><div class="contact-name">Мария Волкова</div><div class="contact-role">Финансовый директор</div></div></div>
+            <table class="contact-table"><tr><td>Телеграм</td><td><a class="tg-link" href="#">@m_volkova</a></td></tr><tr><td>День рождения</td><td>29 августа</td></tr><tr><td>Особенности</td><td>Только по закрывающим документам, через Анну</td></tr></table>
+          </div>
+          <div class="contact-card" data-name="игорь петров" data-role="pr менеджер">
+            <div class="contact-head"><div class="contact-av av-red">ИП</div><div><div class="contact-name">Игорь Петров</div><div class="contact-role">PR-менеджер</div></div></div>
+            <table class="contact-table"><tr><td>Телеграм</td><td><a class="tg-link" href="#">@igor_pr</a></td></tr><tr><td>День рождения</td><td>11 ноября</td></tr><tr><td>Особенности</td><td>Подключать только на спецпроекты и PR-задачи</td></tr></table>
+          </div>
+        </div>
+        <div class="empty-state" id="empty-state">Никого не нашли — попробуй другой запрос</div>
+      </div>
+      <div class="card-section">
+        <div class="card-label">Полезные материалы</div>
+        <div class="mat-file"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="flex-shrink:0;opacity:0.4"><rect x="2" y="1" width="10" height="13" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5 5h5M5 8h5M5 11h3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg><span class="mat-file-name">Гайдбук Яндекс 2024</span><span class="mat-file-size">PDF · 4.2 МБ</span></div>
+        <div class="mat-file"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="flex-shrink:0;opacity:0.4"><rect x="2" y="1" width="10" height="13" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5 5h5M5 8h5M5 11h3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg><span class="mat-file-name">Презентация Q3 2024</span><span class="mat-file-size">PPTX · 18 МБ</span></div>
+        <div class="mat-file"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="flex-shrink:0;opacity:0.4"><rect x="2" y="1" width="10" height="13" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5 5h5M5 8h5M5 11h3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg><span class="mat-file-name">Tone of voice · Бренд-документ</span><span class="mat-file-size">DOCX · 1.1 МБ</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DEPARTMENT CARD PAGE -->
+  <div id="page-department" class="page">
+    <button class="back-btn" onclick="showPage('onboarding')">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Назад к онбордингу
+    </button>
+    <div class="breadcrumb"><a onclick="showPage('onboarding')">Онбординг</a><span class="sep">›</span><a onclick="showPage('onboarding')">Отделы реализации</a><span class="sep">›</span><span class="current">Креатив</span></div>
+    <h1 class="page-title">Карточка отдела</h1>
+    <p class="page-sub">Пример · блок 04 — отделы реализации</p>
+    <div class="card-wrap">
+      <div class="card-section">
+        <div class="card-header">
+          <div class="card-avatar amber" style="font-size:22px">✏️</div>
+          <div style="flex:1">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+              <div class="card-name">Креатив</div>
+              <span class="badge-internal">Внутренний отдел</span>
+            </div>
+            <div class="card-sub">Разработка креативных концепций и идей для клиентских проектов</div>
+          </div>
+        </div>
+      </div>
+      <div class="card-section">
+        <div class="card-label">Зона ответственности</div>
+        <div class="tags" style="margin-bottom:0"><span class="tag">Концепции кампаний</span><span class="tag">Нейминг</span><span class="tag">Сценарии роликов</span><span class="tag">Идеи спецпроектов</span><span class="tag">Копирайт</span></div>
+      </div>
+      <div class="card-section">
+        <div class="card-label">Когда подключать</div>
+        <div class="when-list">
+          <div class="when-item"><div class="when-dot go"></div><p class="when-text">На этапе брифинга — когда нужна большая идея или концепция кампании</p></div>
+          <div class="when-item"><div class="when-dot go"></div><p class="when-text">Когда клиент просит нестандартное решение или спецпроект</p></div>
+          <div class="when-item"><div class="when-dot warn"></div><p class="when-text">Не подключать на мелкие задачи — посты, баннеры, рутинный контент</p></div>
+        </div>
+      </div>
+      <div class="card-section">
+        <div class="card-label">Как передавать задачу</div>
+        <div class="steps">
+          <div class="step"><span class="step-num">1</span><p class="step-text">Завести задачу в Яндекс Трекере с тегом <code>креатив</code></p></div>
+          <div class="step"><span class="step-num">2</span><p class="step-text">Приложить заполненный бриф — без брифа задача не берётся в работу</p></div>
+          <div class="step"><span class="step-num">3</span><p class="step-text">Минимальный срок — 5 рабочих дней. Срочные задачи согласовывать лично</p></div>
+        </div>
+      </div>
+      <div class="card-section">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <div class="card-label" style="margin-bottom:0">Команда отдела</div>
+          <span class="portal-source">
+            <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M6 1a2 2 0 100 4 2 2 0 000-4zM1 10c0-2.2 2.2-4 5-4s5 1.8 5 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+            Из структуры портала
+          </span>
+        </div>
+        <div class="team-list">
+          <div class="team-item">
+            <div class="team-av av-amber">КА</div>
+            <div class="team-info"><div class="team-name">Катя Архипова</div><div class="team-role">Креативный директор · руководитель отдела</div></div>
+            <span class="team-badge">Контакт</span>
+            <a class="tg-link" href="#" style="font-size:12px">@katya_arh</a>
+          </div>
+          <div class="team-item">
+            <div class="team-av av-blue">МС</div>
+            <div class="team-info"><div class="team-name">Макс Соколов</div><div class="team-role">Копирайтер</div></div>
+            <a class="tg-link" href="#" style="font-size:12px">@max_copy</a>
+          </div>
+          <div class="team-item">
+            <div class="team-av av-green">НР</div>
+            <div class="team-info"><div class="team-name">Настя Романова</div><div class="team-role">Креатор</div></div>
+            <a class="tg-link" href="#" style="font-size:12px">@nastya_cr</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  window.scrollTo(0, 0);
+}
+function filterContacts(query) {
+  const q = query.toLowerCase().trim();
+  const cards = document.querySelectorAll('.contact-card');
+  let visible = 0;
+  cards.forEach(card => {
+    const match = !q || card.dataset.name.includes(q) || card.dataset.role.includes(q);
+    card.style.display = match ? '' : 'none';
+    if (match) visible++;
+  });
+  document.getElementById('empty-state').style.display = visible === 0 ? 'block' : 'none';
+  document.getElementById('contact-count').textContent = q ? (visible + ' из 4') : '4 человека';
+}
+</script>
+</body>
+</html>
