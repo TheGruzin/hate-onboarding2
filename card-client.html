@@ -44,7 +44,6 @@ body { background: var(--bg); color: var(--text); font-family: 'Golos Text', san
 .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
 .card-section { padding: 20px 24px; border-bottom: 1px solid var(--border); }
 .card-section:last-child { border-bottom: none; }
-
 .section-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
 
 .tag { font-size: 11px; padding: 3px 10px; border-radius: 100px; border: 1px solid var(--border); color: var(--muted); background: var(--surface2); display: inline-block; }
@@ -54,41 +53,28 @@ body { background: var(--bg); color: var(--text); font-family: 'Golos Text', san
 .contact-card { border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px; transition: border-color 0.15s; }
 .contact-card:hover { border-color: var(--border-hover); }
 .contact-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-.avatar { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; flex-shrink: 0; }
+.avatar { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; flex-shrink: 0; }
 .avatar-amber { background: rgba(239,159,39,0.15); color: var(--amber); }
 .avatar-blue  { background: rgba(55,138,221,0.15); color: var(--blue); }
 .avatar-green { background: rgba(29,158,117,0.15); color: var(--green); }
 .avatar-purple{ background: rgba(108,99,255,0.15); color: var(--accent2); }
 .contact-name { font-size: 13px; font-weight: 600; }
 .contact-role { font-size: 11px; color: var(--muted); }
-
 .contact-table { width: 100%; font-size: 12px; border-collapse: collapse; }
 .contact-table td { padding: 3px 0; vertical-align: top; }
 .contact-table td:first-child { color: var(--muted); width: 90px; }
-.contact-table td:last-child { color: var(--text); }
 .tg-link { color: var(--blue); text-decoration: none; }
 .tg-link:hover { text-decoration: underline; }
-.team-item { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border: 1px solid var(--border); border-radius: var(--radius-sm); transition: border-color 0.15s; }
+
+.team-item { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border: 1px solid var(--border); border-radius: var(--radius-sm); transition: border-color 0.15s; margin-bottom: 8px; }
+.team-item:last-child { margin-bottom: 0; }
 .team-item:hover { border-color: var(--border-hover); }
-.avatar { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; flex-shrink: 0; }
-.avatar-amber  { background: rgba(239,159,39,0.15); color: var(--amber); }
-.avatar-blue   { background: rgba(55,138,221,0.15); color: var(--blue); }
-.avatar-green  { background: rgba(29,158,117,0.15); color: var(--green); }
-.avatar-purple { background: rgba(108,99,255,0.15); color: var(--accent2); }
 
 .search-wrap { position: relative; margin-bottom: 14px; }
 .search-icon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); opacity: 0.3; pointer-events: none; }
 .search-input { width: 100%; padding: 8px 12px 8px 32px; font-size: 13px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface2); color: var(--text); outline: none; font-family: 'Golos Text', sans-serif; transition: border-color 0.15s; }
 .search-input:focus { border-color: var(--border-hover); }
 .search-input::placeholder { color: var(--muted); }
-
-.mat-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 6px; transition: border-color 0.15s; cursor: pointer; }
-.mat-item:last-child { margin-bottom: 0; }
-.mat-item:hover { border-color: var(--border-hover); }
-.mat-icon { opacity: 0.4; flex-shrink: 0; }
-.mat-name { font-size: 13px; flex: 1; }
-.mat-meta { font-size: 11px; color: var(--muted); }
-
 .empty { text-align: center; padding: 28px; color: var(--muted); font-size: 13px; display: none; }
 
 @keyframes fadeUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
@@ -128,181 +114,190 @@ body { background: var(--bg); color: var(--text); font-family: 'Golos Text', san
   </div>
 </aside>
 
-<main class="main">
+<main class="main" id="main-content">
+  <!-- Контент рендерится через JS -->
+</main>
+
+<script>
+const CLIENTS = {
+  iqos: {
+    name: 'IQOS',
+    legal: 'ООО «ФМСМ»',
+    logoText: 'IQ',
+    logoColor: 'color: #378ADD; background: rgba(55,138,221,0.15)',
+    statusColor: 'background:rgba(29,158,117,0.15); color:#1D9E75',
+    about: 'IQOS (Айкос) — популярная электронная система нагревания табака, разработанная компанией Philip Morris International. Устройство создано как альтернатива обычным сигаретам.',
+    directions: ['SMM', 'Продакшн', 'Спец.проекты'],
+    payment: { type: 'Предоплата', term: '100%' },
+    contacts: [
+      { initials: 'НФ', color: 'avatar-blue', name: 'Никита Фролов', role: 'SMM manager', tg: '@fiskyoioioi', bday: '7 июля', note: 'Ровный человек', phone: '79099016198', email: 'nikita.frolov@contracted.pmru.com' },
+      { initials: 'ДМ', color: 'avatar-amber', name: 'Дмитрий Моргунов', role: 'SMM lead', tg: '@Mitya_Mo', bday: '12 июля', note: 'Не ест глютен', phone: '79162664563', email: 'dmitry.morgunov@pmru.com' },
+      { initials: 'ЕС', color: 'avatar-green', name: 'Елизавета Солодянкина', role: 'Brand building team', tg: '@lisssssssssssssssssssssssss', bday: '6 января', note: 'Прекрасный человек', phone: '79265732451', email: 'elizaveta.solodyankina@pmru.com' },
+    ],
+    team: [
+      { initials: 'БН', color: 'avatar-purple', name: 'Бобко Надежда Андреевна', role: 'Account Group Head · руководитель', tg: '@nadinxn', badge: true },
+      { initials: 'БА', color: 'avatar-blue', name: 'Бавтрукевич Анна Алексеевна', role: 'Team Lead', tg: '@annabvtr' },
+      { initials: 'ТА', color: 'avatar-green', name: 'Терехова Анастасия Александровна', role: 'Middle Account manager', tg: '@teranastasiaa' },
+    ],
+  },
+  arnest: {
+    name: 'Арнест',
+    legal: 'ООО «Арнест»',
+    logoText: 'АР',
+    logoColor: 'color: #EF9F27; background: rgba(239,159,39,0.15)',
+    statusColor: 'background:rgba(29,158,117,0.15); color:#1D9E75',
+    about: '«Арнест» — крупнейший российский производитель парфюмерно-косметической продукции, товаров для дома и аэрозольной упаковки. Название расшифровывается как «Аэрозоли — НЕвинномысск — СТаврополье».',
+    directions: ['Блогеры', 'Посевы'],
+    payment: { type: 'Постоплата', term: '30 дней' },
+    contacts: [
+      { initials: 'АК', color: 'avatar-amber', name: 'Алина Краснова', role: 'Маркетинг-директор · ЛПР', tg: '@a_krasnova', bday: '3 апреля', note: 'Принимает решения быстро, любит чёткие цифры', phone: '', email: '' },
+      { initials: 'МС', color: 'avatar-blue', name: 'Максим Соколов', role: 'Digital-менеджер', tg: '@msokolov_arn', bday: '19 октября', note: 'Основной оперативный контакт по блогерам', phone: '', email: '' },
+    ],
+    team: [
+      { initials: 'БН', color: 'avatar-purple', name: 'Бобко Надежда Андреевна', role: 'Account Group Head · руководитель', tg: '@nadinxn', badge: true },
+      { initials: 'АА', color: 'avatar-amber', name: 'Александрова Анастасия Александровна', role: 'Middle Account manager', tg: '@nastya_ale' },
+    ],
+  },
+  wb: {
+    name: 'Wildberries',
+    legal: 'ООО «РВБ»',
+    logoText: 'WB',
+    logoColor: 'color: #1D9E75; background: rgba(29,158,117,0.15)',
+    statusColor: 'background:rgba(29,158,117,0.15); color:#1D9E75',
+    about: 'Wildberries — крупнейший российский маркетплейс и цифровая платформа, где можно купить от одежды и косметики до электроники и товаров для дома. Площадка работает как посредник между продавцами и миллионами покупателей.',
+    directions: ['Посевы', 'Блогеры', 'Продакшн'],
+    payment: { type: 'Предоплата', term: '100%' },
+    contacts: [
+      { initials: 'АР', color: 'avatar-green', name: 'Анастасия Рулева', role: 'Brand manager', tg: '@annshak', bday: '8 сентября', note: 'Просто чудо', phone: '79852545319', email: 'ruleva.a3@wb.ru' },
+      { initials: 'ЛК', color: 'avatar-blue', name: 'Лиза Комарова', role: 'Brand manager', tg: '@lissakomarova', bday: '7 марта', note: 'Диво дивное', phone: '89858489847', email: 'komarova.e19@wb.ru' },
+    ],
+    team: [
+      { initials: 'БН', color: 'avatar-purple', name: 'Бобко Надежда Андреевна', role: 'Account Group Head · руководитель', tg: '@nadinxn', badge: true },
+      { initials: 'ТА', color: 'avatar-green', name: 'Терехова Анастасия Александровна', role: 'Middle Account manager', tg: '@teranastasiaa' },
+      { initials: 'АА', color: 'avatar-amber', name: 'Александрова Анастасия Александровна', role: 'Middle Account manager', tg: '@nastya_ale' },
+    ],
+  },
+};
+
+const params = new URLSearchParams(window.location.search);
+const clientKey = params.get('client') || 'iqos';
+const client = CLIENTS[clientKey] || CLIENTS['iqos'];
+
+const avatarColors = ['avatar-amber', 'avatar-blue', 'avatar-green', 'avatar-purple'];
+
+function contactsHTML(contacts) {
+  return contacts.map((c, i) => {
+    const color = avatarColors[i % avatarColors.length];
+    const search = (c.name + ' ' + c.role).toLowerCase();
+    let rows = '';
+    if (c.tg) rows += `<tr><td>Телеграм</td><td><a class="tg-link" href="https://t.me/${c.tg.replace('@','')}">${c.tg}</a></td></tr>`;
+    if (c.bday) rows += `<tr><td>День рождения</td><td>${c.bday}</td></tr>`;
+    if (c.phone) rows += `<tr><td>Телефон</td><td>${c.phone}</td></tr>`;
+    if (c.email) rows += `<tr><td>Email</td><td style="word-break:break-all;">${c.email}</td></tr>`;
+    if (c.note) rows += `<tr><td>Особенности</td><td style="color:var(--muted);">${c.note}</td></tr>`;
+    return `
+      <div class="contact-card" data-s="${search}">
+        <div class="contact-head">
+          <div class="avatar ${color}">${c.initials}</div>
+          <div><div class="contact-name">${c.name}</div><div class="contact-role">${c.role}</div></div>
+        </div>
+        <table class="contact-table">${rows}</table>
+      </div>`;
+  }).join('');
+}
+
+function teamHTML(team) {
+  return team.map(m => `
+    <div class="team-item">
+      <div class="avatar ${m.color}">${m.initials}</div>
+      <div style="flex:1;">
+        <div class="contact-name">${m.name}</div>
+        <div class="contact-role">${m.role}</div>
+      </div>
+      ${m.badge ? `<span style="font-size:10px; font-weight:600; padding:3px 9px; border-radius:100px; background:rgba(239,159,39,0.12); color:var(--amber); white-space:nowrap; margin-left:auto;">Контакт</span>` : ''}
+      ${m.tg ? `<a class="tg-link" href="https://t.me/${m.tg.replace('@','')}" style="margin-left:12px;">${m.tg}</a>` : ''}
+    </div>`).join('');
+}
+
+const tagsHTML = client.directions.map(d => `<span class="tag">${d}</span>`).join('');
+const payBg = client.payment.type === 'Предоплата'
+  ? 'background:rgba(29,158,117,0.1); border:1px solid rgba(29,158,117,0.25);'
+  : 'background:rgba(239,159,39,0.1); border:1px solid rgba(239,159,39,0.25);';
+const payColor = client.payment.type === 'Предоплата' ? 'color:var(--green)' : 'color:var(--amber)';
+
+document.getElementById('main-content').innerHTML = `
   <div class="breadcrumb">
     <a href="onboarding.html">Онбординг</a>
     <span class="sep">›</span>
-    <a href="onboarding.html">Клиенты и проекты</a>
+    <a href="clients.html">Клиенты и проекты</a>
     <span class="sep">›</span>
-    <span class="current">Яндекс</span>
+    <span class="current">${client.name}</span>
   </div>
 
   <div class="card">
 
-    <!-- Header -->
     <div class="card-section" style="display:flex; align-items:flex-start; gap:18px;">
-      <div style="width:52px; height:52px; border-radius:var(--radius-sm); background:rgba(55,138,221,0.15); display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:600; color:var(--blue); flex-shrink:0; font-family:'Unbounded',sans-serif;">Я</div>
+      <div style="width:52px; height:52px; border-radius:var(--radius-sm); ${client.logoColor}; display:flex; align-items:center; justify-content:center; font-size:16px; font-weight:700; flex-shrink:0; font-family:'Unbounded',sans-serif;">${client.logoText}</div>
       <div style="flex:1;">
         <div style="display:flex; align-items:center; gap:10px; margin-bottom:4px;">
-          <span style="font-family:'Unbounded',sans-serif; font-size:18px; font-weight:700;">Яндекс</span>
-          <span style="font-size:11px; font-weight:600; padding:3px 10px; border-radius:100px; background:rgba(29,158,117,0.15); color:var(--green);">Активный</span>
+          <span style="font-family:'Unbounded',sans-serif; font-size:18px; font-weight:700;">${client.name}</span>
+          <span style="font-size:11px; font-weight:600; padding:3px 10px; border-radius:100px; ${client.statusColor};">Активный</span>
         </div>
-        <p style="font-size:13px; color:var(--muted); margin:0;">ООО «Яндекс»</p>
+        <p style="font-size:13px; color:var(--muted); margin:0;">${client.legal}</p>
       </div>
       <div style="display:flex; flex-direction:column; gap:8px; align-items:flex-end; flex-shrink:0;">
         <div style="text-align:right;">
           <p style="font-size:11px; color:var(--muted); margin:0 0 2px;">Аккаунт</p>
           <p style="font-size:13px; font-weight:600; margin:0;">Эдуард М.</p>
         </div>
-        <div style="background:rgba(239,159,39,0.1); border:1px solid rgba(239,159,39,0.25); border-radius:7px; padding:5px 12px; text-align:right;">
-          <p style="font-size:10px; color:var(--amber); margin:0 0 1px; font-weight:600; letter-spacing:0.5px; text-transform:uppercase;">Постоплата</p>
-          <p style="font-size:13px; font-weight:600; color:var(--text); margin:0;">30 дней</p>
+        <div style="${payBg} border-radius:7px; padding:5px 12px; text-align:right;">
+          <p style="font-size:10px; ${payColor}; margin:0 0 1px; font-weight:600; letter-spacing:0.5px; text-transform:uppercase;">${client.payment.type}</p>
+          <p style="font-size:13px; font-weight:600; color:var(--text); margin:0;">${client.payment.term}</p>
         </div>
       </div>
     </div>
 
-    <!-- About -->
     <div class="card-section">
       <div class="section-label">О клиенте</div>
-      <p style="font-size:13px; color:var(--muted); line-height:1.7; margin:0;">Крупнейшая технологическая компания России. Работаем с командой бренда по направлениям SMM и спецпроектов. Клиент с 2021 года, отношения стабильные.</p>
+      <p style="font-size:13px; color:var(--muted); line-height:1.7; margin:0;">${client.about}</p>
     </div>
 
-    <!-- Directions -->
     <div class="card-section">
       <div class="section-label">Основные направления</div>
-      <div class="tags">
-        <span class="tag">Seeding</span>
-        <span class="tag">Bloggers</span>
-        <span class="tag">Spec.Project</span>
-      </div>
+      <div class="tags">${tagsHTML}</div>
     </div>
 
-    <!-- Contacts -->
     <div class="card-section">
       <div class="section-label">
         Контакты на стороне клиента
-        <span id="cnt-count" style="font-size:11px; color:var(--muted); text-transform:none; letter-spacing:0;">4 человека</span>
+        <span id="cnt-count" style="font-size:11px; color:var(--muted); text-transform:none; letter-spacing:0;">${client.contacts.length} ${plural(client.contacts.length)}</span>
       </div>
       <div class="search-wrap">
         <svg class="search-icon" width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.4"/><path d="M11 11l3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
         <input class="search-input" type="text" placeholder="Поиск по имени или должности..." oninput="filterContacts(this.value)">
       </div>
-      <div class="contact-grid" id="contacts">
-        <div class="contact-card" data-s="анна смирнова бренд-менеджер лпр">
-          <div class="contact-head">
-            <div class="avatar avatar-amber">АС</div>
-            <div><div class="contact-name">Анна Смирнова</div><div class="contact-role">Бренд-менеджер · ЛПР</div></div>
-          </div>
-          <table class="contact-table">
-            <tr><td>Телеграм</td><td><a class="tg-link" href="https://t.me/anna_smirnova">@anna_smirnova</a></td></tr>
-            <tr><td>День рождения</td><td>14 марта</td></tr>
-            <tr><td>Особенности</td><td style="color:var(--muted);">Любит детальные брифы, не звонить без предупреждения</td></tr>
-          </table>
-        </div>
-        <div class="contact-card" data-s="дмитрий козлов маркетолог операционный">
-          <div class="contact-head">
-            <div class="avatar avatar-blue">ДК</div>
-            <div><div class="contact-name">Дмитрий Козлов</div><div class="contact-role">Маркетолог · Операционный</div></div>
-          </div>
-          <table class="contact-table">
-            <tr><td>Телеграм</td><td><a class="tg-link" href="https://t.me/d_kozlov">@d_kozlov</a></td></tr>
-            <tr><td>День рождения</td><td>2 июня</td></tr>
-            <tr><td>Особенности</td><td style="color:var(--muted);">Основной оперативный контакт, отвечает быстро</td></tr>
-          </table>
-        </div>
-        <div class="contact-card" data-s="мария волкова финансовый директор">
-          <div class="contact-head">
-            <div class="avatar avatar-green">МВ</div>
-            <div><div class="contact-name">Мария Волкова</div><div class="contact-role">Финансовый директор</div></div>
-          </div>
-          <table class="contact-table">
-            <tr><td>Телеграм</td><td><a class="tg-link" href="https://t.me/m_volkova">@m_volkova</a></td></tr>
-            <tr><td>День рождения</td><td>29 августа</td></tr>
-            <tr><td>Особенности</td><td style="color:var(--muted);">Только по закрывающим документам, через Анну</td></tr>
-          </table>
-        </div>
-        <div class="contact-card" data-s="игорь петров pr менеджер">
-          <div class="contact-head">
-            <div class="avatar avatar-purple">ИП</div>
-            <div><div class="contact-name">Игорь Петров</div><div class="contact-role">PR-менеджер</div></div>
-          </div>
-          <table class="contact-table">
-            <tr><td>Телеграм</td><td><a class="tg-link" href="https://t.me/igor_pr">@igor_pr</a></td></tr>
-            <tr><td>День рождения</td><td>11 ноября</td></tr>
-            <tr><td>Особенности</td><td style="color:var(--muted);">Подключать только на спецпроекты и PR-задачи</td></tr>
-          </table>
-        </div>
-      </div>
+      <div class="contact-grid" id="contacts">${contactsHTML(client.contacts)}</div>
       <div class="empty" id="cnt-empty">Никого не нашли — попробуй другой запрос</div>
     </div>
 
-    <!-- Agency team -->
     <div class="card-section">
       <div class="section-label" style="display:flex; align-items:center; justify-content:space-between;">
         Команда со стороны агентства
-        <span style="font-size:11px; color:var(--muted); font-weight:400; text-transform:none; letter-spacing:0;">4 человека</span>
+        <span style="font-size:11px; color:var(--muted); font-weight:400; text-transform:none; letter-spacing:0;">${client.team.length} ${plural(client.team.length)}</span>
       </div>
-      <div style="display:flex; flex-direction:column; gap:8px;">
-
-        <div class="team-item">
-          <div class="avatar avatar-purple">БН</div>
-          <div style="flex:1;">
-            <div class="contact-name">Бобко Надежда Андреевна</div>
-            <div class="contact-role">Account Group Head · руководитель</div>
-          </div>
-          <span style="font-size:10px; font-weight:600; padding:3px 9px; border-radius:100px; background:rgba(239,159,39,0.12); color:var(--amber); white-space:nowrap; margin-left:auto;">Контакт</span>
-          <a class="tg-link" href="https://t.me/nadinxn" style="margin-left:12px;">@nadinxn</a>
-        </div>
-
-        <div class="team-item">
-          <div class="avatar avatar-blue">БА</div>
-          <div style="flex:1;">
-            <div class="contact-name">Бавтрукевич Анна Алексеевна</div>
-            <div class="contact-role">Team Lead</div>
-          </div>
-          <a class="tg-link" href="https://t.me/annabvtr">@annabvtr</a>
-        </div>
-
-        <div class="team-item">
-          <div class="avatar avatar-green">ТА</div>
-          <div style="flex:1;">
-            <div class="contact-name">Терехова Анастасия Александровна</div>
-            <div class="contact-role">Middle Account manager</div>
-          </div>
-          <a class="tg-link" href="https://t.me/teranastasiaa">@teranastasiaa</a>
-        </div>
-
-        <div class="team-item">
-          <div class="avatar avatar-amber">АА</div>
-          <div style="flex:1;">
-            <div class="contact-name">Александрова Анастасия Александровна</div>
-            <div class="contact-role">Middle Account manager</div>
-          </div>
-          <a class="tg-link" href="https://t.me/nastya_ale">@nastya_ale</a>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- Materials -->
-    <div class="card-section">
-      <div class="section-label">Полезные материалы</div>
-      <a class="mat-item" href="https://www.figma.com/file/YIdUwbkPMpqEPhwOdRELvB/Брендбук-Еды-2022-WIP?node-id=0%3A1&t=e2pc1w2iZCNZw3wX-0" target="_blank" style="text-decoration:none;">
-        <svg class="mat-icon" width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1.5" stroke="#a259ff" stroke-width="1.2"/><rect x="9" y="1" width="6" height="6" rx="3" stroke="#1abcfe" stroke-width="1.2"/><rect x="1" y="9" width="6" height="6" rx="1.5" stroke="#0acf83" stroke-width="1.2"/><rect x="9" y="9" width="6" height="6" rx="1.5" stroke="#ff7262" stroke-width="1.2"/></svg>
-        <span class="mat-name">Брендбук — Figma</span>
-        <span class="mat-meta" style="color:var(--blue);">Открыть →</span>
-      </a>
-      <a class="mat-item" href="https://disk.yandex.ru/d/4AInAKMvqXfT_g/logotype%20and%20sign%20%28aka%20token%29/sign%20%28token%29" target="_blank" style="text-decoration:none;">
-        <svg class="mat-icon" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1v9M5 7l3 3 3-3" stroke="#EF9F27" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 11v2a1 1 0 001 1h10a1 1 0 001-1v-2" stroke="#EF9F27" stroke-width="1.3" stroke-linecap="round"/></svg>
-        <span class="mat-name">Логотипы и знаки — Яндекс Диск</span>
-        <span class="mat-meta" style="color:var(--blue);">Открыть →</span>
-      </a>
+      <div style="display:flex; flex-direction:column;">${teamHTML(client.team)}</div>
     </div>
 
   </div>
-</main>
+`;
 
-<script>
+function plural(n) {
+  if (n === 1) return 'человек';
+  if (n >= 2 && n <= 4) return 'человека';
+  return 'человек';
+}
+
+const total = client.contacts.length;
 function filterContacts(q) {
   q = q.toLowerCase().trim();
   const cards = document.querySelectorAll('#contacts .contact-card');
@@ -313,7 +308,7 @@ function filterContacts(q) {
     if (match) n++;
   });
   document.getElementById('cnt-empty').style.display = n === 0 ? 'block' : 'none';
-  document.getElementById('cnt-count').textContent = q ? n + ' из 4' : '4 человека';
+  document.getElementById('cnt-count').textContent = q ? n + ' из ' + total : total + ' ' + plural(total);
 }
 </script>
 </body>
